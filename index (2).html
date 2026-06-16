@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VA Growth Systems | Automatización de Ventas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- Paleta Premium High-Ticket --- */
+        :root {
+            --azul-bg: #050d1a; 
+            --azul-card: #0c1a2e;
+            --verde-neon: #00e676;
+            --verde-hover: #00c853;
+            --rojo-alerta: #ff4d4d;
+            --blanco: #ffffff;
+            --texto-claro: #a0aec0;
+            --borde-glass: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--azul-bg);
+            color: var(--blanco);
+            overflow-x: hidden;
+        }
+
+        /* --- Animaciones de Aparición --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Header y Logo --- */
+        header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 25px 5%;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            height: 75px; 
+            width: auto;
+            max-width: 100%;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); 
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        /* --- Botones Hacia WhatsApp --- */
+        .btn-premium {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--verde-neon);
+            color: #000;
+            padding: 16px 36px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 25px rgba(0, 230, 118, 0.25);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-premium:hover {
+            background: var(--verde-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 230, 118, 0.4);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 150px 5% 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 80vw;
+            height: 80vw;
+            max-width: 800px;
+            max-height: 800px;
+            background: radial-gradient(circle, rgba(0, 230, 118, 0.1) 0%, rgba(0,0,0,0) 65%);
+            top: -15vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero-tag {
+            background: rgba(0, 230, 118, 0.1);
+            color: var(--verde-neon);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            border: 1px solid rgba(0, 230, 118, 0.3);
+            z-index: 1;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+        }
+
+        .hero-content {
+            max-width: 850px;
+            z-index: 1;
+            margin-bottom: 50px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.2rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            margin-top: 0;
+        }
+
+        .hero h1 span {
+            color: var(--verde-neon);
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2.5vw, 1.25rem);
+            color: var(--texto-claro);
+            max-width: 750px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* --- Contenedor del Chat (Con borde iluminado) --- */
+        .chat-wrapper {
+            width: 100%;
+            max-width: 450px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .chat-container {
+            width: 100%;
+            height: 600px;
+            background: var(--blanco);
+            border-radius: 24px;
+            border: 2px solid rgba(0, 230, 118, 0.3);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 50px rgba(0, 230, 118, 0.15);
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .chat-container:hover {
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 70px rgba(0, 230, 118, 0.25);
+        }
+
+        .chat-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* --- Trust Bar --- */
+        .trust-bar {
+            padding: 40px 5%;
+            border-top: 1px solid var(--borde-glass);
+            border-bottom: 1px solid var(--borde-glass);
+            background: rgba(255, 255, 255, 0.01);
+            text-align: center;
+        }
+
+        .trust-bar p {
+            color: #718096;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .integrations-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            opacity: 0.7;
+        }
+
+        .integrations-grid span {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--blanco);
+        }
+
+        /* --- Cómo evitamos perder clientes --- */
+        .features-section {
+            padding: 100px 5%;
+            background: var(--azul-bg);
+            text-align: center;
+        }
+
+        .section-header {
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 20px;
+        }
+
+        .section-header p {
+            color: var(--texto-claro);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--azul-card);
+            border: 1px solid var(--borde-glass);
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: left;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 230, 118, 0.5);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--blanco);
+        }
+
+        .feature-card p {
+            color: var(--texto-claro);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* --- Calculadora de Pérdidas (CON ANIMACIÓN JS) --- */
+        .pain-section {
+            padding: 100px 5%;
+            background: linear-gradient(180deg, var(--azul-bg) 0%, #03070e 100%);
+            text-align: center;
+        }
+
+        .calculator-grid {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            max-width: 1000px;
+            margin: 0 auto 50px;
+        }
+
+        .calc-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--borde-glass);
+            padding: 40px 20px;
+            border-radius: 20px;
+            flex: 1;
+            min-width: 280px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calc-card .number {
+            font-size: 3.8rem;
+            font-weight: 800;
+            color: var(--blanco);
+            margin-bottom: 15px;
+            line-height: 1;
+        }
+
+        .calc-card .desc {
+            color: var(--texto-claro);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .calc-card.resultado {
+            border-color: rgba(255, 77, 77, 0.4);
+            background: linear-gradient(180deg, rgba(255, 77, 77, 0.08) 0%, transparent 100%);
+        }
+
+        .calc-card.resultado .number {
+            color: var(--rojo-alerta);
+        }
+
+        /* --- Garantía y Confianza --- */
+        .guarantee-box {
+            max-width: 800px;
+            margin: 0 auto 80px;
+            padding: 40px;
+            background: rgba(0, 230, 118, 0.05);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            border-radius: 20px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .guarantee-icon {
+            font-size: 4rem;
+        }
+
+        .guarantee-text h3 {
+            color: var(--verde-neon);
+            margin-top: 0;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .guarantee-text p {
+            color: var(--texto-claro);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* --- FAQ Section --- */
+        .faq-section {
+            padding: 80px 5% 100px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--azul-card);
+            border: 1px solid var(--borde-glass);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            padding: 0 20px 20px;
+            color: var(--texto-claro);
+            line-height: 1.6;
+            display: none;
+        }
+
+        /* --- CTA Final --- */
+        .cta-final {
+            padding: 100px 5%;
+            text-align: center;
+            background: var(--azul-card);
+            border-top: 1px solid var(--borde-glass);
+        }
+
+        .cta-final h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 20px 5%; }
+            .btn-premium.header-btn { display: none; }
+            .logo { height: 55px; }
+            .chat-container { height: 500px; }
+            .guarantee-box { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <img src="logo-va.png" alt="VA Growth Systems Logo" class="logo">
+        <a href="https://wa.me/584127466623?text=Hola,%20quiero%20agendar%20una%20demostración%20del%20sistema%20automatizado" class="btn-premium header-btn" style="padding: 10px 24px; font-size: 0.85rem;" target="_blank">Agendar Demostración</a>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content reveal">
+            <div class="hero-tag">Inteligencia Artificial para Ventas B2B</div>
+            <h1>Convierte tu WhatsApp en una <span>Máquina de Ventas</span></h1>
+            <p>Prueba nuestro Asistente Inteligente en vivo. Descubre cómo responde al instante, perfila a tus prospectos y agenda citas directamente en tu calendario sin que tengas que mover un dedo.</p>
+        </div>
+
+        <div class="chat-wrapper reveal" style="transition-delay: 0.2s;">
+            <div class="chat-container">
+                <iframe src="https://agencia-n8n.djex2n.easypanel.host/webhook/9b54ff6e-3542-48d1-9c5a-1d5f01b362a0/chat"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Bar -->
+    <section class="trust-bar reveal">
+        <p>Integración nativa y transparente con tu ecosistema actual</p>
+        <div class="integrations-grid">
+            <span>WhatsApp Business API</span>
+            <span>CRMs Avanzados</span>
+            <span>Google Calendar</span>
+            <span>OpenAI</span>
+        </div>
+    </section>
+
+    <!-- Características -->
+    <section class="features-section">
+        <div class="section-header reveal">
+            <h2>Sincronización Total: De la duda a la <span>cita agendada</span></h2>
+            <p>Un sistema robusto que no solo chatea, sino que ejecuta acciones. Eliminamos el error humano para que tu única preocupación sea atender a los clientes que ya están listos en tu calendario.</p>
+        </div>
+
+        <div class="grid-3">
+            <div class="feature-card reveal">
+                <div class="feature-icon">⚡</div>
+                <h3>Respuesta Inmediata</h3>
+                <p>El sistema atiende al prospecto en el segundo exacto en que te contacta. Captura su interés en el pico más alto de emoción antes de que busque a tu competencia.</p>
+            </div>
+
+            <div class="feature-card reveal" style="transition-delay: 0.1s;">
+                <div class="feature-icon">🎯</div>
+                <h3>Perfilación y Filtrado</h3>
+                <p>Se acabaron las horas perdidas. La IA está programada con la lógica de tu negocio para hacer las preguntas clave y descartar a quienes no cumplen con el perfil ideal.</p>
+            </div>
+
+            <div class="feature-card reveal" style="transition-delay: 0.2s;">
+                <div class="feature-icon">📅</div>
+                <h3>Agendamiento Autónomo</h3>
+                <p>Una vez calificado, el sistema revisa tu disponibilidad en tiempo real, le ofrece opciones al lead y bloquea el espacio en tu Google Calendar 100% en piloto automático.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calculadora Dinámica -->
+    <section class="pain-section">
+        <div class="section-header reveal">
+            <h2>¿Cuánto dinero te cuesta <span>depender de procesos manuales?</span></h2>
+            <p>Hagamos la matemática real. Esto es lo que sucede en un negocio de alto valor cuando un cliente potencial se enfría porque estabas ocupado atendiendo otras urgencias:</p>
+        </div>
+
+        <div class="calculator-grid">
+            <div class="calc-card reveal">
+                <div class="number"><span class="counter" data-target="8" data-prefix="">0</span></div>
+                <div class="desc">Leads altamente calificados que se pierden al mes por responder tarde o fuera de horario comercial.</div>
+            </div>
+            
+            <div class="calc-card reveal" style="transition-delay: 0.1s;">
+                <div class="number"><span class="counter" data-target="1200" data-prefix="$">0</span></div>
+                <div class="desc">Valor promedio de tu servicio (Ej: Una póliza de seguro, un tratamiento o un servicio especializado).</div>
+            </div>
+
+            <div class="calc-card resultado reveal" style="transition-delay: 0.2s;">
+                <div class="number"><span class="counter" data-target="9600" data-prefix="$">0</span></div>
+                <div class="desc">Fuga de capital mensual que dejas sobre la mesa por no tener un sistema de atención y agendamiento 24/7.</div>
+            </div>
+        </div>
+
+        <!-- Sección de Garantía (Confianza Pura) -->
+        <div class="guarantee-box reveal">
+            <div class="guarantee-icon">🛡️</div>
+            <div class="guarantee-text">
+                <h3>Implementación "Cero Estrés"</h3>
+                <p>Sabemos que tu tiempo vale dinero. Nosotros nos encargamos de todo el desarrollo técnico, la integración con tus redes sociales y el entrenamiento de la Inteligencia Artificial con la información de tu negocio. Te entregamos un sistema llave en mano, listo para vender.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Preguntas Frecuentes -->
+    <section class="faq-section reveal">
+        <div class="section-header" style="text-align: center; margin-bottom: 40px;">
+            <h2>Preguntas <span>Frecuentes</span></h2>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">¿Tengo que saber de programación para usarlo? <span>+</span></div>
+            <div class="faq-answer">En absoluto. Nosotros nos encargamos de toda la instalación, configuración y pruebas. Tú solo verás cómo las citas empiezan a llegar a tu calendario.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">¿El bot sonará como un robot sin emociones? <span>+</span></div>
+            <div class="faq-answer">No. Utilizamos modelos de lenguaje avanzado (como OpenAI) y le damos instrucciones precisas para que adopte el tono de voz de tu marca. La experiencia es tan natural que muchos leads no se dan cuenta de que hablan con una IA.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">¿Qué pasa si un cliente hace una pregunta muy compleja? <span>+</span></div>
+            <div class="faq-answer">El sistema está diseñado para reconocer sus propios límites. Si una pregunta requiere intervención humana, la IA detendrá la automatización y te notificará inmediatamente para que un miembro de tu equipo tome el control del chat.</div>
+        </div>
+    </section>
+
+    <!-- CTA Final (Directo a WS) -->
+    <section class="cta-final reveal">
+        <h2>Deja de gestionar mensajes.<br>Empieza a cerrar ventas.</h2>
+        <p style="color: var(--texto-claro); margin-bottom: 40px;">Hablemos sobre tu negocio y veamos si nuestro sistema es el adecuado para ti.</p>
+        <a href="https://wa.me/584127466623?text=Hola,%20me%20gustaría%20agendar%20una%20demostración%20para%20integrar%20IA%20en%20mi%20negocio" class="btn-premium" target="_blank">Escríbenos por WhatsApp</a>
+    </section>
+
+    <!-- Scripts: Animaciones y Lógica -->
+    <script>
+        // 1. Efecto Scroll (Aparición)
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal(); 
+
+        // 2. Animación de Contadores (Números subiendo)
+        const counters = document.querySelectorAll('.counter');
+        const speed = 100; 
+
+        const animateCounters = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    const target = +counter.getAttribute('data-target');
+                    const prefix = counter.getAttribute('data-prefix');
+                    
+                    const updateCount = () => {
+                        const count = +counter.innerText.replace(/\D/g, '');
+                        const inc = target / speed;
+
+                        if (count < target) {
+                            counter.innerText = prefix + Math.ceil(count + inc).toLocaleString('en-US');
+                            setTimeout(updateCount, 20);
+                        } else {
+                            counter.innerText = prefix + target.toLocaleString('en-US');
+                        }
+                    };
+                    updateCount();
+                    observer.unobserve(counter); // Animarlo solo una vez
+                }
+            });
+        };
+
+        const counterObserver = new IntersectionObserver(animateCounters, { threshold: 0.5 });
+        counters.forEach(counter => counterObserver.observe(counter));
+
+        // 3. Funcionalidad del acordeón (FAQ)
+        function toggleFaq(element) {
+            const answer = element.nextElementSibling;
+            const sign = element.querySelector('span');
+            
+            if (answer.style.display === "block") {
+                answer.style.display = "none";
+                sign.innerText = "+";
+            } else {
+                answer.style.display = "block";
+                sign.innerText = "-";
+            }
+        }
+    </script>
+</body>
+</html>
